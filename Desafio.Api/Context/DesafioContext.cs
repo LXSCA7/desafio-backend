@@ -24,9 +24,7 @@ namespace Desafio.Api.Context
                 entity.Property(e => e.CPF).IsRequired();
                 entity.Property(e => e.Email).IsRequired();
                 entity.Property(e => e.UserType).IsRequired();
-                entity.ToTable("Users", t => t.HasCheckConstraint("CK_UserType", "'UserType' IN ('Cliente', 'Lojista')"));
                 entity.Property(e => e.Saldo);
-
             });
         }
     }
