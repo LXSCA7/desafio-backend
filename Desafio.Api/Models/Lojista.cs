@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Desafio.Api.Models
 {
-    public class Lojista : Pessoa
+    public class Lojista : User
     {
         
     }
