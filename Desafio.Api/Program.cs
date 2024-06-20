@@ -12,6 +12,7 @@ internal class Program
         // Add services to the container.
         builder.Services.AddDbContext<DesafioContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
         builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+        builder.Services.AddHttpClient();
 
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

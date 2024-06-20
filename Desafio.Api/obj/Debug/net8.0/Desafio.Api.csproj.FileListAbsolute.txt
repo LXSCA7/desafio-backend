@@ -104,3 +104,4 @@ D:\desafio-backend\Desafio.Api\obj\Debug\net8.0\refint\Desafio.Api.dll
 D:\desafio-backend\Desafio.Api\obj\Debug\net8.0\Desafio.Api.pdb
 D:\desafio-backend\Desafio.Api\obj\Debug\net8.0\Desafio.Api.genruntimeconfig.cache
 D:\desafio-backend\Desafio.Api\obj\Debug\net8.0\ref\Desafio.Api.dll
+D:\desafio-backend\Desafio.Api\bin\Debug\net8.0\Newtonsoft.Json.dll
