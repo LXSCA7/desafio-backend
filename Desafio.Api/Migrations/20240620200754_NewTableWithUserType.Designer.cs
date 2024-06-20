@@ -11,8 +11,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Desafio.Api.Migrations
 {
     [DbContext(typeof(DesafioContext))]
-    [Migration("20240620045145_CriacaoDaTabelaNovamente")]
-    partial class CriacaoDaTabelaNovamente
+    [Migration("20240620200754_NewTableWithUserType")]
+    partial class NewTableWithUserType
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,17 +33,30 @@ namespace Desafio.Api.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CPF")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("NomeCompleto")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<decimal>("Saldo")
+                        .HasColumnType("numeric");
+
+                    b.Property<string>("UserType")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_UserType", "'UserType' IN ('Cliente', 'Lojista')");
+                        });
                 });
 #pragma warning restore 612, 618
         }

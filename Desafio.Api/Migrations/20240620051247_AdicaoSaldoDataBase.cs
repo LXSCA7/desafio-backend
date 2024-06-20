@@ -12,7 +12,7 @@ namespace Desafio.Api.Migrations
         {
             migrationBuilder.AddColumn<decimal>(
                 name: "Saldo",
-                table: "Pessoas",
+                table: "Users",
                 type: "numeric",
                 nullable: false,
                 defaultValue: 0m);
@@ -23,7 +23,7 @@ namespace Desafio.Api.Migrations
         {
             migrationBuilder.DropColumn(
                 name: "Saldo",
-                table: "Pessoas");
+                table: "Users");
         }
     }
 }

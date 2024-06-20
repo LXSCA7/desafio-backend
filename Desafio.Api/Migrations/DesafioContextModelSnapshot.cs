@@ -21,7 +21,7 @@ namespace Desafio.Api.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Desafio.Api.Models.Pessoa", b =>
+            modelBuilder.Entity("Desafio.Api.Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -30,20 +30,30 @@ namespace Desafio.Api.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CPF")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("NomeCompleto")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<decimal>("Saldo")
                         .HasColumnType("numeric");
 
+                    b.Property<string>("UserType")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Pessoas");
+                    b.ToTable("Users", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_UserType", "'UserType' IN ('Cliente', 'Lojista')");
+                        });
                 });
 #pragma warning restore 612, 618
         }

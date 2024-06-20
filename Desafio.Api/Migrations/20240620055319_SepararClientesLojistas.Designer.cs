@@ -11,8 +11,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Desafio.Api.Migrations
 {
     [DbContext(typeof(DesafioContext))]
-    [Migration("20240620045145_CriacaoDaTabelaNovamente")]
-    partial class CriacaoDaTabelaNovamente
+    [Migration("20240620055319_SepararClientesLojistas")]
+    partial class SepararClientesLojistas
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,7 +24,7 @@ namespace Desafio.Api.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Desafio.Api.Models.User", b =>
+            modelBuilder.Entity("Desafio.Api.Models.Cliente", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -33,17 +33,51 @@ namespace Desafio.Api.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CPF")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("NomeCompleto")
+                        .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<decimal>("Saldo")
+                        .HasColumnType("numeric");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Clientes", (string)null);
+                });
+
+            modelBuilder.Entity("Desafio.Api.Models.Lojista", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CPF")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("NomeCompleto")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<decimal>("Saldo")
+                        .HasColumnType("numeric");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Lojistas", (string)null);
                 });
 #pragma warning restore 612, 618
         }

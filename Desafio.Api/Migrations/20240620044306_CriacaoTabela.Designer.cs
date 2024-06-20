@@ -24,7 +24,7 @@ namespace Desafio.Api.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Desafio.Api.Models.Pessoa", b =>
+            modelBuilder.Entity("Desafio.Api.Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -43,7 +43,7 @@ namespace Desafio.Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Pessoas");
+                    b.ToTable("Users");
                 });
 #pragma warning restore 612, 618
         }
