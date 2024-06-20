@@ -20,19 +20,10 @@ namespace Desafio.Api.Controllers
 
         // endpoints
 
-        [HttpPost("clientes")]
-        public IActionResult CreateCliente(Cliente cliente)
+        [HttpPost]
+        public IActionResult Create(User user)
         {
-            _context.Pessoas.Add(cliente);
-            _context.SaveChanges();
-
-            return Ok();
-        }
-
-        [HttpPost("lojistas")]
-        public IActionResult CreateLojista(Lojista lojista)
-        {
-            _context.Pessoas.Add(lojista);
+            _context.Users.Add(user);
             _context.SaveChanges();
 
             return Ok();
