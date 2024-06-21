@@ -7,6 +7,5 @@ namespace Desafio.Api.Models
 {
     public class Lojista : User
     {
-        
     }
 }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Desafio.Api.Context;
+using Desafio.Api.Controllers;
 
 namespace Desafio.Api.Models
 {
@@ -70,6 +72,6 @@ namespace Desafio.Api.Models
                 return false;
 
             return true;
-        }
+        }  
     }
 }
