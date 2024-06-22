@@ -19,12 +19,12 @@ namespace Desafio.Api.Controllers
     {
         private readonly DesafioContext _context;
         private readonly HttpClient _httpClient;
-        private readonly ICpfService _cpfService;
-        public DesafioController(DesafioContext context, IHttpClientFactory httpClientFactory, ICpfService cpfService)
+        private readonly IUserService _userService;
+        public DesafioController(DesafioContext context, IHttpClientFactory httpClientFactory, IUserService userService)
         {
             _context = context;
             _httpClient = httpClientFactory.CreateClient();
-            _cpfService = cpfService;
+            _userService = userService;
         }
 
         // endpoints
@@ -37,16 +37,19 @@ namespace Desafio.Api.Controllers
                 Saldo = user.Balance,
                 Senha = user.Password,
                 Email = user.Email,
+                UserType = "Cliente"
             };
-            cliente.UserType = "Cliente";
             cliente.CPF = CPFs.RemoveDigitsCPF(cliente.CPF);
             if(!CPFs.ValidCPF(cliente.CPF))
                 return BadRequest("CPF inválido");
 
             cliente.CPF = CPFs.FormatCPF(cliente.CPF);
 
-            if (_cpfService.CpfExists(cliente))
+            if (_userService.CpfExists(cliente))
                 return BadRequest("O CPF deve ser único no sistema");
+
+            if (_userService.EmailExists(cliente))
+                return BadRequest("O email deve ser único no sistema.");
 
             _context.Users.Add(cliente);
             _context.SaveChanges();
@@ -66,8 +69,11 @@ namespace Desafio.Api.Controllers
                 UserType = "Lojista"
             };
 
-            if (_cpfService.CpfExists(lojista))
+            if (_userService.CpfExists(lojista))
                 return BadRequest("O CPF deve ser único no sistema");
+
+            if (_userService.EmailExists(lojista))
+                return BadRequest("O email deve ser único no sistema.");
 
             _context.Users.Add(lojista);
             _context.SaveChanges();

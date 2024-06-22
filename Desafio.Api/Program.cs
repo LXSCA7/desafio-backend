@@ -13,7 +13,7 @@ internal class Program
 
         // Add services to the container.
         builder.Services.AddDbContext<DesafioContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-        builder.Services.AddScoped<ICpfService, CpfService>();
+        builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
         builder.Services.AddHttpClient();
 
