@@ -1,5 +1,7 @@
 using System.Text.Json.Serialization;
 using Desafio.Api.Context;
+using Desafio.Api.Interfaces;
+using Desafio.Api.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.Json;
 
@@ -11,6 +13,7 @@ internal class Program
 
         // Add services to the container.
         builder.Services.AddDbContext<DesafioContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+        builder.Services.AddScoped<ICpfService, CpfService>();
         builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
         builder.Services.AddHttpClient();
 

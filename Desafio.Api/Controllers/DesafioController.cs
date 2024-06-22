@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Desafio.Api.Context;
+using Desafio.Api.Interfaces;
 using Desafio.Api.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Newtonsoft.Json;
 
 namespace Desafio.Api.Controllers
@@ -16,27 +19,56 @@ namespace Desafio.Api.Controllers
     {
         private readonly DesafioContext _context;
         private readonly HttpClient _httpClient;
-        public DesafioController(DesafioContext context, IHttpClientFactory httpClientFactory)
+        private readonly ICpfService _cpfService;
+        public DesafioController(DesafioContext context, IHttpClientFactory httpClientFactory, ICpfService cpfService)
         {
             _context = context;
             _httpClient = httpClientFactory.CreateClient();
+            _cpfService = cpfService;
         }
 
         // endpoints
-        [HttpPost("create-clientes")]
-        public IActionResult CreateCliente(User cliente)
+        [HttpPost("create-cliente")]
+        public IActionResult CreateCliente([FromBody]UserBase user)
         {
+            Cliente cliente = new() {
+                NomeCompleto = user.FullName,
+                CPF = user.CPF,
+                Saldo = user.Balance,
+                Senha = user.Password,
+                Email = user.Email,
+            };
             cliente.UserType = "Cliente";
+            cliente.CPF = CPFs.RemoveDigitsCPF(cliente.CPF);
+            if(!CPFs.ValidCPF(cliente.CPF))
+                return BadRequest("CPF inválido");
+
+            cliente.CPF = CPFs.FormatCPF(cliente.CPF);
+
+            if (_cpfService.CpfExists(cliente))
+                return BadRequest("O CPF deve ser único no sistema");
+
             _context.Users.Add(cliente);
             _context.SaveChanges();
 
             return Ok();
         }
 
-        [HttpPost("create-lojistas")]
-        public IActionResult CreateLojista(User lojista)
+        [HttpPost("create-lojista")]
+        public IActionResult CreateLojista([FromBody]UserBase user)
         {
-            lojista.UserType = "Lojista";
+            Cliente lojista = new() {
+                NomeCompleto = user.FullName,
+                CPF = user.CPF,
+                Saldo = user.Balance,
+                Senha = user.Password,
+                Email = user.Email,
+                UserType = "Lojista"
+            };
+
+            if (_cpfService.CpfExists(lojista))
+                return BadRequest("O CPF deve ser único no sistema");
+
             _context.Users.Add(lojista);
             _context.SaveChanges();
 
