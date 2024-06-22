@@ -71,12 +71,17 @@ namespace Desafio.Api.Controllers
                 Email = user.Email,
                 UserType = "Lojista"
             };
+            lojista.CPF = CPFs.RemoveDigitsCPF(lojista.CPF);
+            if(!CPFs.ValidCPF(lojista.CPF))
+                return BadRequest("CPF inválido");
 
-            if (!Email.VerifyEmail(lojista.Email))
-                return BadRequest("Email inválido");
+            lojista.CPF = CPFs.FormatCPF(lojista.CPF);
 
             if (_userService.CpfExists(lojista))
                 return BadRequest("O CPF deve ser único no sistema");
+
+            if (!Email.VerifyEmail(lojista.Email))
+                return BadRequest("Email inválido");
 
             if (_userService.EmailExists(lojista))
                 return BadRequest("O email deve ser único no sistema.");
