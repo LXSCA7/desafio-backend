@@ -57,7 +57,7 @@ namespace Desafio.Api.Controllers
             _context.Users.Add(cliente);
             _context.SaveChanges();
 
-            return Ok();
+            return Ok("Cliente registrado com sucesso.");
         }
 
         [HttpPost("create-lojista")]
@@ -89,7 +89,7 @@ namespace Desafio.Api.Controllers
             _context.Users.Add(lojista);
             _context.SaveChanges();
 
-            return Ok();
+            return Ok("Lojista registrado com sucesso.");
         }
     
         [HttpPost("transferir")]
