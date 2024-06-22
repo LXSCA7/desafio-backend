@@ -6,8 +6,10 @@ using Desafio.Api.Models;
 
 namespace Desafio.Api.Interfaces
 {
-    public interface ICpfService
+    public interface IUserService
     {
         bool CpfExists(User user);
+
+        bool EmailExists(User user);
     }
 }

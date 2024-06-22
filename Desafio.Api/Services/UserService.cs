@@ -8,10 +8,10 @@ using Desafio.Api.Models;
 
 namespace Desafio.Api.Services
 {
-    public class CpfService : ICpfService
+    public class UserService : IUserService
     {
         private readonly DesafioContext _context;
-        public CpfService(DesafioContext context)
+        public UserService(DesafioContext context)
         {
             _context = context;
         }
@@ -19,6 +19,11 @@ namespace Desafio.Api.Services
         public bool CpfExists(User user)
         {
             return _context.Users.Any(u => u.CPF == user.CPF);
+        }
+
+        public bool EmailExists(User user)
+        {
+            return _context.Users.Any(u => u.Email == user.Email);
         }
     }
 }
