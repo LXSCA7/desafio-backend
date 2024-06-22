@@ -48,6 +48,9 @@ namespace Desafio.Api.Controllers
             if (_userService.CpfExists(cliente))
                 return BadRequest("O CPF deve ser único no sistema");
 
+            if (!Email.VerifyEmail(cliente.Email))
+                return BadRequest("Email inválido");
+
             if (_userService.EmailExists(cliente))
                 return BadRequest("O email deve ser único no sistema.");
 
@@ -68,6 +71,9 @@ namespace Desafio.Api.Controllers
                 Email = user.Email,
                 UserType = "Lojista"
             };
+
+            if (!Email.VerifyEmail(lojista.Email))
+                return BadRequest("Email inválido");
 
             if (_userService.CpfExists(lojista))
                 return BadRequest("O CPF deve ser único no sistema");
