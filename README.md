@@ -1,6 +1,6 @@
 ﻿# Banco Simplificado
 
-Este projeto é parte de um desafio de desenvolvimento backend que envolve a criação de uma API RESTful para gestão de usuários (clientes e lojistas) com funcionalidades de registro, transferência de saldo e integração com serviço autorizador externo.
+Este projeto é parte de um desafio de desenvolvimento backend promovido pelo PicPay que envolve a criação de uma API RESTful para gestão de usuários (clientes e lojistas) com funcionalidades de registro, transferência de saldo e integração com serviço autorizador externo.
 
 ## Tecnologias Utilizadas
 
