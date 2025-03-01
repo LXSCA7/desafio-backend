@@ -18,31 +18,36 @@ namespace Desafio.Api.Controllers
 {
     [ApiController]
     [Route("api/")]
-    public class DesafioController(ITransferService _transferService, IUserRepository _userRepository, BankContext _bankContext) : ControllerBase
+    public class DesafioController(ITransferService _transferService, IUserService _userService) : ControllerBase
     {
-
-        // endpoints
         [HttpPost("create-costumer")]
         public async Task<IActionResult> CreateCostumer([FromBody]UserDTO userDto)
         {
-            User user = userDto.ToUser(UserType.COSTUMER);
-            // user.Document = CPFs.RemoveDigitsCPF(user.Document);
-            // user.Id = 0;
-            await _userRepository.AddUserAsync(user);
-            // await _bankContext.Users.AddAsync(user);
-            // await _bankContext.SaveChangesAsync();
-
-            return Ok("Cliente registrado com sucesso.");
+            try
+            {
+                User user = userDto.ToUser(UserType.COSTUMER);
+                await _userService.AddNewUser(user);
+                return Ok("Cliente registrado com sucesso.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost("create-retailer")]
         public async Task<IActionResult> CreateRetailer([FromBody]UserDTO userDto)
         {
-            User user = userDto.ToUser(UserType.RETAILER);
-            // user.Document = CPFs.RemoveDigitsCPF(user.Document);
-            await _userRepository.AddUserAsync(user);
-
-            return Ok("Lojista registrado com sucesso.");
+            try
+            {
+                User user = userDto.ToUser(UserType.RETAILER);
+                await _userService.AddNewUser(user);
+                return Ok("Lojista registrado com sucesso.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     
         [HttpPost("transfer")]
