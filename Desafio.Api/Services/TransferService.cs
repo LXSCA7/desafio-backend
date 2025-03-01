@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Desafio.Api.Models;
 using Desafio.Api.Repositories;
@@ -9,25 +10,34 @@ using Newtonsoft.Json;
 
 namespace Desafio.Api.Services
 {
-    public class TransferService(HttpClient _httpClient, IUserRepository _userRepository, IUserService _userService) : ITransferService
+    public class TransferService(HttpClient _httpClient, IUserRepository _userRepository, IUserService _userService, ILogger<IUserService> _logger) : ITransferService
     {
         public async Task Transfer(Transfer transfer)
         {
-            await _userService.ValidateTransfer(transfer);
+            try
+            {
+                User sender = await _userRepository.GetUserById(transfer.SenderId);
+                User receiver = await _userRepository.GetUserById(transfer.ReceiverId);
+                await _userService.ValidateTransfer(transfer);
 
-            User sender = await _userRepository.GetUserById(transfer.SenderId);
-            User receiver = await _userRepository.GetUserById(transfer.ReceiverId);
+                if (!await AuthorizeTransfer())
+                    throw new InvalidOperationException("Transação não autorizada.");
 
-            if (!await AuthorizeTransfer())
-                throw new InvalidOperationException("Transação não autorizada.");
+                sender.Balance -= transfer.Value;
+                receiver.Balance += transfer.Value;
+                
+                List<User> users = [sender, receiver];
 
-            sender.Balance -= transfer.Value;
-            receiver.Balance += transfer.Value;
-            
-            List<User> users = [sender, receiver];
-            await _userRepository.UpdateUsersAsync(users);
+                await Notify(receiver, $"Você recebeu uma transferência no valor de R${transfer.Value}");
+                await Notify(sender, $"Transferência realizada com sucesso.");
 
-            await Notify(sender, receiver, transfer);
+                await _userRepository.UpdateUsersAsync(users);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"{ex.Message} A transferência será revertida.");
+                throw;
+            }
         }
         public async Task<bool> AuthorizeTransfer()
         {
@@ -41,14 +51,16 @@ namespace Desafio.Api.Services
             return jsonResponse.Data.Authorization && jsonResponse.Status == "success";
         }
 
-        public async Task Notify(User sender, User receiver, Transfer transfer)
+        public async Task Notify(User user, string message)
         {
             Notification notification = new()
             {
-                Email = receiver.Email,
-                Message = $"{receiver.FirstName} {receiver.LastName}, você recebeu uma transferência no valor de R${transfer.Value}"
+                Email = user.Email,
+                Message = message
             };
-            _ = await _httpClient.PostAsJsonAsync<Notification>("https://util.devi.tools/api/v1/notify", notification);
+            var response = await _httpClient.PostAsJsonAsync<Notification>("https://util.devi.tools/api/v1/notify", notification);
+            if (!response.IsSuccessStatusCode)
+                throw new InvalidOperationException("Serviço de notificação está fora do ar. Tente novamente mais tarde.");
         }
     }
     class ApiResponse

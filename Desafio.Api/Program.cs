@@ -13,11 +13,15 @@ internal class Program
 
         // Add services to the container.
         builder.Services.AddDbContext<BankContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-        // builder.Services.AddDbContext<BankContext>(options => options.UseNpgsql("Host=localhost;Port=5432;Database=simplified_bank;Username=username;Password=password;"));
         
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<ITransferService, TransferService>();
         builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+        builder.Logging.ClearProviders();
+        builder.Logging.AddConsole(); 
+        builder.Logging.AddDebug();
+
 
         builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
         builder.Services.AddHttpClient();

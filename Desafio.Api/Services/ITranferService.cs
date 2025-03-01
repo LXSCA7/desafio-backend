@@ -10,6 +10,6 @@ namespace Desafio.Api.Services
     {
         public Task<bool> AuthorizeTransfer();
         public Task Transfer(Transfer transfer);
-        public Task Notify(User sender, User receiver, Transfer transfer);
+        public Task Notify(User user, string message);
     }
 }
