@@ -10,9 +10,9 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Desafio.Api.Migrations
 {
-    [DbContext(typeof(DesafioContext))]
-    [Migration("20240620203112_RemocaoCKUsers")]
-    partial class RemocaoCKUsers
+    [DbContext(typeof(BankContext))]
+    [Migration("20250301040552_CreateDatabase")]
+    partial class CreateDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,7 +32,10 @@ namespace Desafio.Api.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("CPF")
+                    b.Property<decimal>("Balance")
+                        .HasColumnType("numeric");
+
+                    b.Property<string>("Document")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -40,18 +43,28 @@ namespace Desafio.Api.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("NomeCompleto")
+                    b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<decimal>("Saldo")
-                        .HasColumnType("numeric");
-
-                    b.Property<string>("UserType")
+                    b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("UserType")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Document")
+                        .IsUnique();
+
+                    b.HasIndex("Email")
+                        .IsUnique();
 
                     b.ToTable("Users");
                 });
