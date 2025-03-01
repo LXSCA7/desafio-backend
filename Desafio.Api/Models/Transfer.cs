@@ -7,8 +7,8 @@ namespace Desafio.Api.Models
 {
     public class Transfer
     {
-        public decimal Valor { get; set; }
-        public int IdEnvia { get; set; }
-        public int IdRecebe { get; set; }
+        public decimal Value { get; set; }
+        public int SenderId { get; set; }
+        public int ReceiverId { get; set; }
     }
 }

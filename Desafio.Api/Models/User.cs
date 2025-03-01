@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using BCrypt.Net;
+using Desafio.Api.Enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace Desafio.Api.Models
 {
@@ -12,30 +9,24 @@ namespace Desafio.Api.Models
         public int Id { get; set; }
 
         [Required]
-        public string NomeCompleto { get; set ; }
+        public string FirstName { get; set ; }
+
+        [Required]
+        public string LastName { get; set ; }
 
         [Required]        
-        public decimal Saldo { get; set; }
+        public decimal Balance { get; set; }
        
         [Required]
-        public string CPF { get; set; }
+        public string Document { get; set; }
         
         [Required]
         public string Email { get; set ; }
         
         [Required]
-        [RegularExpression("Cliente|Lojista", ErrorMessage = "Usertype deve ser 'Cliente' ou 'Lojista'")]
-        public string UserType { get; set; }
+        public UserType UserType { get; set; }
 
-        private string _senhaHash;
-        
         [Required]
-        public string Senha
-        {
-            set
-            {
-                _senhaHash = BCrypt.Net.BCrypt.HashPassword(value);
-            }
-        }
+        public string Password { get; set; }
     }
 }

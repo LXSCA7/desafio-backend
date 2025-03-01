@@ -29,10 +29,8 @@ namespace Desafio.Api.Models
         {
             StringBuilder newCPF = new();
             foreach (char c in CPF)
-            {
                 if (char.IsDigit(c))
                     newCPF.Append(c);
-            }
 
             return newCPF.ToString();
         }
