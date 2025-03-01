@@ -11,11 +11,22 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Desafio.Api.Services
 {
-    public class UserService(BankContext _context, 
-                             IUserRepository _userRepository) : IUserService
+    public class UserService(IUserRepository _userRepository) : IUserService
     {
-        public bool CpfExists(User user) => _context.Users.Any(u => u.Document == user.Document);
-        public bool EmailExists(User user) => _context.Users.Any(u => u.Email == user.Email);
+        public async Task AddNewUser(User user)
+        {
+            user.Document = Document.RemoveDocumentDigits(user.Document);
+            if (string.IsNullOrEmpty(user.Document))
+                throw new InvalidOperationException("Documento não pode ser vazio.");
+
+            if (await _userRepository.DocumentExists(user.Document))
+                throw new InvalidOperationException("Documento já cadastrado.");
+
+            if (await _userRepository.EmailExists(user.Email))
+                throw new InvalidOperationException("Email já cadastrado.");
+
+            await _userRepository.AddUserAsync(user);
+        }
 
         public async Task ValidateTransfer(Transfer transfer)
         {
@@ -39,6 +50,5 @@ namespace Desafio.Api.Services
             if (receiver == new User())
                 throw new Exception("Usuário não encontrado.");
         }
-
     }
 }

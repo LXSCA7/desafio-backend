@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using Desafio.Api.Context;
 using Desafio.Api.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Desafio.Api.Repositories
 {
@@ -15,7 +17,7 @@ namespace Desafio.Api.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task SaveChangesAsync(User user)
+        public async Task UpdateUserAsync(User user)
         {
             _context.Update(user);
             await _context.SaveChangesAsync();
@@ -28,16 +30,8 @@ namespace Desafio.Api.Repositories
             _context.UpdateRange(users);
             await _context.SaveChangesAsync();
         }
-
-        public Task<bool> DocumentExists(string document)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> EmailExists(string email)
-        {
-            throw new NotImplementedException();
-        }
+        public async Task<bool> DocumentExists(string document) => await _context.Users.AnyAsync(u => u.Document == document);
+        public async Task<bool> EmailExists(string email) => await _context.Users.AnyAsync(u => u.Email == email);
     }
     
 }

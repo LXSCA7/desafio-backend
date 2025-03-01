@@ -8,9 +8,7 @@ namespace Desafio.Api.Services
 {
     public interface IUserService
     {
-        bool CpfExists(User user);
-
-        bool EmailExists(User user);
+        public Task AddNewUser(User user);
         public Task ValidateTransfer(Transfer transfer);
     }
 }
