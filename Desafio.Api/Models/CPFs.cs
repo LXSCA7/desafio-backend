@@ -8,7 +8,7 @@ using Desafio.Api.Controllers;
 
 namespace Desafio.Api.Models
 {
-    public class CPFs
+    public static class Document
     {
         public static string FormatCPF(string CPF)
         {
@@ -25,14 +25,14 @@ namespace Desafio.Api.Models
             return newCPF.ToString();
         }
 
-        public static string RemoveDigitsCPF(string CPF)
+        public static string RemoveDocumentDigits(string document)
         {
-            StringBuilder newCPF = new();
-            foreach (char c in CPF)
+            StringBuilder newDocument = new();
+            foreach (char c in document)
                 if (char.IsDigit(c))
-                    newCPF.Append(c);
+                    newDocument.Append(c);
 
-            return newCPF.ToString();
+            return newDocument.ToString();
         }
         public static bool ValidCPF(string CPF)
         {
