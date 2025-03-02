@@ -17,6 +17,7 @@ internal class Program
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<ITransferService, TransferService>();
         builder.Services.AddScoped<IUserRepository, UserRepository>();
+        builder.Services.AddSingleton<INotificationService, NotificationService>();
 
         builder.Logging.ClearProviders();
         builder.Logging.AddConsole(); 
