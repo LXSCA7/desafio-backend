@@ -10,7 +10,11 @@ using Newtonsoft.Json;
 
 namespace Desafio.Api.Services
 {
-    public class TransferService(HttpClient _httpClient, IUserRepository _userRepository, IUserService _userService, ILogger<IUserService> _logger) : ITransferService
+    public class TransferService(IUserRepository _userRepository, 
+                                 IUserService _userService, 
+                                 ILogger<IUserService> _logger, 
+                                 INotificationService _notificationService, 
+                                 HttpClient _httpClient) : ITransferService
     {
         public async Task Transfer(Transfer transfer)
         {
@@ -28,14 +32,14 @@ namespace Desafio.Api.Services
                 
                 List<User> users = [sender, receiver];
 
-                await Notify(receiver, $"Você recebeu uma transferência no valor de R${transfer.Value}");
-                await Notify(sender, $"Transferência realizada com sucesso.");
+                await _notificationService.SendNotificationAsync(sender, $"Transferência realizada com sucesso.");
+                await _notificationService.SendNotificationAsync(receiver, $"Você recebeu uma transferência no valor de R${transfer.Value}");
 
                 await _userRepository.UpdateUsersAsync(users);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"{ex.Message} A transferência será revertida.");
+                _logger.LogError(ex.Message);
                 throw;
             }
         }
@@ -50,18 +54,6 @@ namespace Desafio.Api.Services
 
             return jsonResponse.Data.Authorization && jsonResponse.Status == "success";
         }
-
-        public async Task Notify(User user, string message)
-        {
-            Notification notification = new()
-            {
-                Email = user.Email,
-                Message = message
-            };
-            var response = await _httpClient.PostAsJsonAsync<Notification>("https://util.devi.tools/api/v1/notify", notification);
-            if (!response.IsSuccessStatusCode)
-                throw new InvalidOperationException("Serviço de notificação está fora do ar. Tente novamente mais tarde.");
-        }
     }
     class ApiResponse
     {
@@ -72,10 +64,5 @@ namespace Desafio.Api.Services
     class DataContent
     {
         public bool Authorization { get; set; }
-    }
-
-    class Notification {
-        public string Email { get; set; }
-        public string Message { get; set; }
     }
 }
