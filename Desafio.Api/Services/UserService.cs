@@ -37,7 +37,7 @@ namespace Desafio.Api.Services
                 throw new InvalidOperationException("Valor de transferência deve ser maior que 0.");
 
             User sender = await _userRepository.GetUserById(transfer.SenderId); 
-            if (sender == new User())
+            if (sender == null || sender == new User())
                 throw new Exception("Usuário não encontrado.");
 
             if (sender.Balance < transfer.Value)
@@ -47,7 +47,7 @@ namespace Desafio.Api.Services
                 throw new InvalidOperationException("Lojistas não podem realizar transferências.");
 
             User receiver = await _userRepository.GetUserById(transfer.ReceiverId);
-            if (receiver == new User())
+            if (receiver == null || receiver == new User())
                 throw new Exception("Usuário não encontrado.");
         }
     }
