@@ -14,8 +14,10 @@ namespace Desafio.Api.Services
                                  IUserService _userService, 
                                  ILogger<IUserService> _logger, 
                                  INotificationService _notificationService, 
-                                 HttpClient _httpClient) : ITransferService
+                                 HttpClient _httpClient,
+                                 IConfiguration _configuration) : ITransferService
     {
+        private readonly string _baseUrl = _configuration["Requests:AuthorizeTransferUrl"];
         public async Task Transfer(Transfer transfer)
         {
             try
@@ -45,7 +47,7 @@ namespace Desafio.Api.Services
         }
         public async Task<bool> AuthorizeTransfer()
         {
-            var response = await _httpClient.GetAsync("https://util.devi.tools/api/v2/authorize");
+            var response = await _httpClient.GetAsync(_baseUrl);
             if (!response.IsSuccessStatusCode)
                 return false;
 

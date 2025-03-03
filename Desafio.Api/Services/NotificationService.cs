@@ -6,8 +6,9 @@ using Desafio.Api.Models;
 
 namespace Desafio.Api.Services
 {
-    public class NotificationService(HttpClient _httpClient) : INotificationService
+    public class NotificationService(HttpClient _httpClient, IConfiguration _configuration) : INotificationService
     {
+        private readonly string _baseUrl = _configuration["Requests:NotificationUrl"];
         public async Task SendNotificationAsync(User user, string message)
         {
             Notification notification = new()
@@ -15,7 +16,7 @@ namespace Desafio.Api.Services
                 Email = user.Email,
                 Message = message
             };
-            var response = await _httpClient.PostAsJsonAsync<Notification>("https://util.devi.tools/api/v1/notify", notification);
+            var response = await _httpClient.PostAsJsonAsync<Notification>(_baseUrl, notification);
             if (!response.IsSuccessStatusCode)
                 throw new InvalidOperationException("Serviço de notificação está fora do ar e a transferência será revertida. Tente novamente mais tarde.");
         }
